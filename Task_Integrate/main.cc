@@ -1,6 +1,12 @@
 #include <stack>
 #include <iostream>
 #include <pthread.h>
+#include <cmath>
+#include <boost/program_options.hpp>
+
+#include <sys/select.h>
+#include <unistd.h>
+#include <sys/time.h>
 
 struct Node_t
 {
@@ -18,11 +24,13 @@ struct Node_t
     };
 };
 
-// Секция с глобальными переменными
+// Секция с глобальными переменными/константами
 
-constexpr int SPK = 8;
-constexpr int maxTask = 8;
-int nProc = 0;
+constexpr int maxTask = 100000;
+constexpr int nProc = 2;
+constexpr int SPK = maxTask / nProc;
+
+double epsilon = 1e-8;
 
 pthread_mutex_t globalStackMutex;
 pthread_mutex_t globalStackTaskPresent;
@@ -30,7 +38,7 @@ std::stack<Node_t> globalStack;
 int nActive = 0;
 
 pthread_mutex_t sumMutex;
-int globalSum = 0;
+double globalSum = 0;
 
 // Алгоритм взят из книги Якобовского "Введение в параллельные методы решения задач", страницы 269-273
 
@@ -41,15 +49,13 @@ bool breakCond(double sacb, double sab, double epsilon)
 
 double function(double x)
 {
-    return {};
+    return cos(1. / x);
 }
 
 void* thread(void * ptr)
 {
     std::stack<Node_t> localStack;
     double localSum = 0;
-
-    double epsilon = 1e-6;
 
     // Начало цикла обработки стека интервалов
     while(1)
@@ -100,6 +106,7 @@ void* thread(void * ptr)
             else 
             {
                 Node_t tempNode = {currInterval.start, c};
+                localStack.push(tempNode);
                 currInterval = {c, currInterval.end};
             }
 
@@ -167,5 +174,40 @@ void* thread(void * ptr)
 
 int main()
 {
+    pthread_mutex_init(&globalStackMutex, NULL);
+    pthread_mutex_unlock(&globalStackMutex);
 
+    pthread_mutex_init(&globalStackTaskPresent, NULL);
+
+    pthread_mutex_init(&sumMutex, NULL);
+    pthread_mutex_unlock(&sumMutex);
+
+    Node_t tempNode = {5e-3, 4};
+    globalStack.push(tempNode);
+
+    pthread_mutex_unlock(&globalStackTaskPresent);
+
+    pthread_t threads[nProc];
+
+    struct timeval t1, t2;
+
+    gettimeofday(&t1, NULL);
+
+    for(int i = 0; i < nProc; ++i)
+        pthread_create(threads + i, NULL, thread, NULL);
+
+    for(int i = 0; i < nProc; ++i)
+        pthread_join(threads[i], NULL);
+    
+    gettimeofday(&t2, NULL);
+
+    long long deltaUsec = t2.tv_usec - t1.tv_usec;
+    long long deltaSec = t2.tv_sec - t1.tv_sec;
+    long long delta1 = deltaUsec + 1000000 * deltaSec;
+    
+    std::cout << "Значение интеграла S cos(1/x)dx от " << 5e-3 << " до " << 4 << " равно:\n" << globalSum << std::endl;
+    std::cout << "Разница по времени: " << delta1 << " mks" << std::endl;
+    std::cout << "Количество потоков: " << nProc << std::endl;
+    
+    return 0;
 }
