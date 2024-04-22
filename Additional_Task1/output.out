@@ -1,0 +1,124 @@
+---------------------Testing Send--------------------
+Testing for message size: 1
+Executer 0 preparing to send message
+Executer 0 has sent message, going to sleep
+Exectuter 1 sent message for 6 ms
+Exectuter 0 is preparing to recieve message
+Send time: 24 ms, recieve time: 23 ms
+Testing for message size: 10
+Executer 0 preparing to send message
+Executer 0 has sent message, going to sleep
+Exectuter 1 sent message for 3 ms
+Exectuter 0 is preparing to recieve message
+Send time: 4 ms, recieve time: 8 ms
+Testing for message size: 100
+Executer 0 preparing to send message
+Executer 0 has sent message, going to sleep
+Exectuter 1 sent message for 4 ms
+Exectuter 0 is preparing to recieve message
+Send time: 3 ms, recieve time: 9 ms
+Testing for message size: 1000
+Executer 0 preparing to send message
+Executer 0 has sent message, going to sleep
+Exectuter 0 is preparing to recieve message
+Send time: 17 ms, recieve time: 21 ms
+Testing for message size: 10000
+Executer 0 preparing to send message
+Exectuter 1 sent message for 2080 ms
+Executer 0 has sent message, going to sleep
+Exectuter 0 is preparing to recieve message
+Send time: 37 ms, recieve time: 32 ms
+---------------------Testing Ssend--------------------
+Testing for message size: 1
+Executer 0 preparing to Ssend message
+Exectuter 1 sent message for 2114 ms
+Executer 0 has sent message, going to sleep
+Exectuter 1 sent message for 2088 ms
+Exectuter 0 is preparing to recieve message
+Send time: 9 ms, recieve time: 8 ms
+Testing for message size: 10
+Executer 0 preparing to Ssend message
+Executer 0 has sent message, going to sleep
+Exectuter 0 is preparing to recieve message
+Send time: 13 ms, recieve time: 10 ms
+Testing for message size: 100
+Executer 0 preparing to Ssend message
+Executer 0 has sent message, going to sleep
+Exectuter 1 sent message for 2089 ms
+Exectuter 0 is preparing to recieve message
+Send time: 13 ms, recieve time: 11 ms
+Testing for message size: 1000
+Executer 0 preparing to Ssend message
+Executer 0 has sent message, going to sleep
+Exectuter 1 sent message for 2093 ms
+Exectuter 1 sent message for 2090 ms
+Exectuter 0 is preparing to recieve message
+Send time: 14 ms, recieve time: 11 ms
+Testing for message size: 10000
+Executer 0 preparing to Ssend message
+Executer 0 has sent message, going to sleep
+Exectuter 0 is preparing to recieve message
+Exectuter 1 sent message for 2093 ms
+Send time: 29 ms, recieve time: 57 ms
+---------------------Testing Rsend--------------------
+Testing for message size: 1
+Executer 0 preparing to Rsend message
+Executer 0 has sent message, going to sleep
+Exectuter 1 sent message for 2 ms
+Exectuter 0 is preparing to recieve message
+Send time: 2 ms, recieve time: 13 ms
+Testing for message size: 10
+Executer 0 preparing to Rsend message
+Executer 0 has sent message, going to sleep
+Exectuter 1 sent message for 4 ms
+Exectuter 0 is preparing to recieve message
+Send time: 2 ms, recieve time: 8 ms
+Testing for message size: 100
+Executer 0 preparing to Rsend message
+Executer 0 has sent message, going to sleep
+Exectuter 1 sent message for 2 ms
+Exectuter 0 is preparing to recieve message
+Send time: 2 ms, recieve time: 7 ms
+Testing for message size: 1000
+Executer 0 preparing to Rsend message
+Executer 0 has sent message, going to sleep
+Exectuter 0 is preparing to recieve message
+Send time: 9 ms, recieve time: 10 ms
+Testing for message size: 10000
+Executer 0 preparing to Rsend message
+Exectuter 1 sent message for 2086 ms
+Executer 0 has sent message, going to sleep
+Exectuter 0 is preparing to recieve message
+Send time: 28 ms, recieve time: 34 ms
+---------------------Testing Bsend--------------------
+Exectuter 1 sent message for 2108 ms
+Exectuter 1 sent message for 2 ms
+Testing for message size: 1
+Executer 0 preparing to Bsend message
+Executer 0 has sent message, going to sleep
+Exectuter 0 is preparing to recieve message
+Send time: 2 ms, recieve time: 7 ms
+Testing for message size: 10
+Executer 0 preparing to Bsend message
+Executer 0 has sent message, going to sleep
+Exectuter 1 sent message for 2 ms
+Exectuter 0 is preparing to recieve message
+Send time: 3 ms, recieve time: 6 ms
+Testing for message size: 100
+Executer 0 preparing to Bsend message
+Executer 0 has sent message, going to sleep
+Exectuter 1 sent message for 2 ms
+Exectuter 0 is preparing to recieve message
+Send time: 3 ms, recieve time: 8 ms
+Testing for message size: 1000
+Executer 0 preparing to Bsend message
+Executer 0 has sent message, going to sleep
+Exectuter 1 sent message for 2055 ms
+Exectuter 0 is preparing to recieve message
+Send time: 3 ms, recieve time: 9 ms
+Testing for message size: 10000
+Executer 0 preparing to Bsend message
+Executer 0 has sent message, going to sleep
+Exectuter 0 is preparing to recieve message
+Send time: 33 ms, recieve time: 69 ms
+Exectuter 1 sent message for 28 ms
