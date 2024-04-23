@@ -2,11 +2,13 @@
 #include <iostream>
 #include <pthread.h>
 #include <cmath>
-#include <boost/program_options.hpp>
+// #include <boost/program_options.hpp>
 
 #include <sys/select.h>
 #include <unistd.h>
 #include <sys/time.h>
+
+#include <cstdlib>
 
 struct Node_t
 {
@@ -26,25 +28,25 @@ struct Node_t
 
 // Секция с глобальными переменными/константами
 
-constexpr int maxTask = 100000;
-constexpr int nProc = 2;
-constexpr int SPK = maxTask / nProc;
+constexpr int maxTask = 10000000;
+int nProc = 8;
+constexpr int SPK = 8;
 
-double epsilon = 1e-8;
+double epsilon = 1e-14;
 
 pthread_mutex_t globalStackMutex;
 pthread_mutex_t globalStackTaskPresent;
 std::stack<Node_t> globalStack;
-int nActive = 0;
+volatile int nActive = 0;
 
 pthread_mutex_t sumMutex;
-double globalSum = 0;
+volatile double globalSum = 0;
 
 // Алгоритм взят из книги Якобовского "Введение в параллельные методы решения задач", страницы 269-273
 
 bool breakCond(double sacb, double sab, double epsilon)
 {
-    return !(abs(sacb - sab) < epsilon);
+    return !(fabs(sacb - sab) < epsilon);
 }
 
 double function(double x)
@@ -83,9 +85,11 @@ void* thread(void * ptr)
 
         if(currInterval.isTerminal())
             break;
-    
+
         while(1)
         {
+            // std::cout << currInterval.start << " " << currInterval.end << std::endl;
+
             double c = currInterval.countAverage();
             double fc = function(c), fa = function(currInterval.start), fb = function(currInterval.end);
             double sac = (fa + fc) * (c - currInterval.start) / 2;
@@ -103,7 +107,7 @@ void* thread(void * ptr)
                 currInterval = localStack.top();
                 localStack.pop();
             }
-            else 
+            else
             {
                 Node_t tempNode = {currInterval.start, c};
                 localStack.push(tempNode);
@@ -115,10 +119,11 @@ void* thread(void * ptr)
             // Начало критической секции заполнения
             // глобального стека отрезками интегрирования
 
-            pthread_mutex_lock(&globalStackMutex);
-            if((localStack.size() > SPK) && (!globalStack.empty()))
+
+            if((localStack.size() > SPK) && (globalStack.empty()))
             {
-                if(!globalStack.empty())
+                pthread_mutex_lock(&globalStackMutex);
+                if(globalStack.empty())
 
                     // установить семафор наличия
                     // записей в глобальном стеке
@@ -131,8 +136,9 @@ void* thread(void * ptr)
                     localStack.pop();
                     globalStack.push(tempNode);
                 }
+                pthread_mutex_unlock(&globalStackMutex);
             }
-            pthread_mutex_unlock(&globalStackMutex);
+
 
             // Конец критической секции заполнения глобального
             // стека отрезками интегрирования
@@ -153,14 +159,14 @@ void* thread(void * ptr)
                 globalStack.push(tempNode);
             }
             // в глобальном стеке есть записи
-            pthread_mutex_unlock(&globalStackTaskPresent);             
+            pthread_mutex_unlock(&globalStackTaskPresent);
         }
 
-        
+
         pthread_mutex_unlock(&globalStackMutex);
         // Конец критической секции заполнения глобального
         // стека терминальными отрезками
-    }   
+    }
     // конец цикла обработки стека интервалов
 
     // Начало критической секции сложения частичных сумм
@@ -169,11 +175,19 @@ void* thread(void * ptr)
     pthread_mutex_unlock(&sumMutex);
     // Конец критической секции сложения частичных сумм
 
+    pthread_exit(NULL);
     return NULL;
 }
 
-int main()
+int main(int argc, char ** argv)
 {
+
+    nProc = std::atoi(argv[1]);
+    int powerExponent = std::atoi(argv[2]);
+
+    epsilon = pow(10, -powerExponent);
+
+
     pthread_mutex_init(&globalStackMutex, NULL);
     pthread_mutex_unlock(&globalStackMutex);
 
@@ -182,14 +196,15 @@ int main()
     pthread_mutex_init(&sumMutex, NULL);
     pthread_mutex_unlock(&sumMutex);
 
-    Node_t tempNode = {5e-3, 4};
+    Node_t tempNode = {0.005, 4};
     globalStack.push(tempNode);
 
     pthread_mutex_unlock(&globalStackTaskPresent);
 
-    pthread_t threads[nProc];
+    pthread_t * threads = static_cast<pthread_t *>(malloc(nProc * sizeof(pthread_t)));
 
     struct timeval t1, t2;
+
 
     gettimeofday(&t1, NULL);
 
@@ -198,16 +213,18 @@ int main()
 
     for(int i = 0; i < nProc; ++i)
         pthread_join(threads[i], NULL);
-    
+
     gettimeofday(&t2, NULL);
 
     long long deltaUsec = t2.tv_usec - t1.tv_usec;
     long long deltaSec = t2.tv_sec - t1.tv_sec;
     long long delta1 = deltaUsec + 1000000 * deltaSec;
-    
+
     std::cout << "Значение интеграла S cos(1/x)dx от " << 5e-3 << " до " << 4 << " равно:\n" << globalSum << std::endl;
     std::cout << "Разница по времени: " << delta1 << " mks" << std::endl;
     std::cout << "Количество потоков: " << nProc << std::endl;
-    
+
+    free(threads);
+
     return 0;
 }
