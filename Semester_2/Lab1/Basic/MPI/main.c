@@ -81,7 +81,7 @@ void writeToFile(int rank, int size, double** a, const struct Margins X, const s
     {
         for (int j = Y.begin; j < Y.end; j++)
         {
-            fprintf(ff,"%f ",a[i][j]);
+            fprintf(ff,"%f ",a[i - X.begin][j - Y.begin]);
         }
         fprintf(ff,"\n");
     }
@@ -107,7 +107,7 @@ void executer(int rank, int size, double** a, const struct Margins X, const stru
     {
         for (int j = Y.begin; j < Y.end; j++)
         {
-            a[i][j] = sin(2*a[i][j]);
+            a[i - X.begin][j - Y.begin] = sin(2*a[i - X.begin][j - Y.begin]);
         }
     }
 
@@ -168,15 +168,15 @@ int main(int argc, char **argv)
     const int x = atoi(argv[1]);
     const int y = atoi(argv[2]);
 
-    struct Margins X = {0, getMarginSize(getMargins(rank, size, x))};
+    struct Margins X = getMargins(rank, size, x);
     struct Margins Y = {0, y};
 
     double** a = (double **)calloc(getMarginSize(X), sizeof(double**));
     handleCallocError(a);
     for(int i = X.begin; i < X.end; ++i)
     {
-        a[i] = (double*)calloc(getMarginSize(Y), sizeof(double*));
-        handleCallocError(a[i]);
+        a[i - X.begin] = (double*)calloc(getMarginSize(Y), sizeof(double*));
+        handleCallocError(a[i - X.begin]);
     }
 
     FILE *ff;
@@ -185,7 +185,7 @@ int main(int argc, char **argv)
     {
         for (int j = Y.begin; j < Y.end; j++)
         {
-            a[i][j] = 10 * i + j;
+            a[i - X.begin][j - Y.begin] = 10 * i + j;
         }
     }
 
@@ -193,7 +193,7 @@ int main(int argc, char **argv)
 
     for(int i = X.begin; i < X.end; ++i)
     {
-        free(a[i]);
+        free(a[i - X.begin]);
     }
     free(a);
 
