@@ -16,7 +16,9 @@ int main()
             {
                 char tempString[50];
                 sprintf(tempString, "Hello from thread %d\n", omp_get_thread_num());
-                printf("Thread %d is going to concatenate helloString with: %s", omp_get_thread_num(), tempString);
+
+                printf("Thread %d: now helloString is:\n%s", omp_get_thread_num(), helloString);
+                printf("Thread %d: is going to concatenate helloString with: %s\n", omp_get_thread_num(), tempString);
                 
                 strcat(helloString, tempString);
             }
