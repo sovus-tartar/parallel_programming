@@ -6,9 +6,11 @@
 #include <sys/select.h>
 #include <sys/time.h>
 
+const unsigned long kNanoseconds = 1000000;
+
 unsigned long getTimeOfDayDiff(struct timeval start, struct timeval stop)
 {
-    return (stop.tv_sec - start.tv_sec) * 1000000 + stop.tv_usec - start.tv_usec;
+    return (stop.tv_sec - start.tv_sec) * kNanoseconds + stop.tv_usec - start.tv_usec;
 }
 
 void handleCallocError(void * ptr)
@@ -32,6 +34,7 @@ int main(int argc, char **argv)
         a[i] = (double*)calloc(y, sizeof(double*));
         handleCallocError(a[i]);
     }
+
     int i = 0, j = 0;
     FILE *ff = NULL;
 
@@ -57,18 +60,18 @@ int main(int argc, char **argv)
     }
     gettimeofday(&stop, NULL);
 
-    ff = fopen("result.txt","w");
-    for(i=0; i < x; i++)
-    {
-        for (j=0; j < y; j++)
-        {
-            fprintf(ff,"%f ",a[i][j]);
-        }
-        fprintf(ff,"\n");
-    }
-    fclose(ff);
+    // ff = fopen("result.txt","w");
+    // for(i=0; i < x; i++)
+    // {
+    //     for (j=0; j < y; j++)
+    //     {
+    //         fprintf(ff,"%f ",a[i][j]);
+    //     }
+    //     fprintf(ff,"\n");
+    // }
+    // fclose(ff);
 
-    printf("Time spent: %lf sec\n", (double) getTimeOfDayDiff(start, stop) / 1000000);
+    printf("Time spent: %lf sec\n", (double) getTimeOfDayDiff(start, stop) / kNanoseconds);
 
     for(int i = 0; i < x; ++i)
     {

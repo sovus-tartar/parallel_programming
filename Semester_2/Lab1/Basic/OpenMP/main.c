@@ -4,19 +4,34 @@
 
 #include <omp.h>
 
+void handleCallocError(void * ptr)
+{
+    if (ptr == NULL)
+    {
+        printf("Calloc failed to allocate memory, aborting...\n");
+        abort();
+    }
+}
+
 int main(int argc, char **argv)
 {
     const int x = atoi(argv[1]);
     const int y = atoi(argv[2]);
 
-    double a[x][y];
-    int i, j;
+    double** a = (double **)calloc(x, sizeof(double**));
+    handleCallocError(a);
+    for(int i = 0; i < x; ++i)
+    {
+        a[i] = (double*)calloc(y, sizeof(double*));
+        handleCallocError(a[i]);
+    }
+
     FILE *ff;
 
     //подготовительная часть – заполнение некими данными
-    for (i=0; i < x; i++)
+    for (int i = 0; i < x; i++)
     {
-        for (j=0; j<y; j++)
+        for (int j=0; j<y; j++)
         {
             a[i][j] = 10*i +j;
         }
@@ -27,9 +42,9 @@ int main(int argc, char **argv)
     double start = omp_get_wtime();
 
     #pragma omp parallel
-    for (i=0; i < x; i++)
+    for (int i=0; i < x; i++)
     {
-        for (j = 0; j < y; j++)
+        for (int j = 0; j < y; j++)
         {
             a[i][j] = sin(2*a[i][j]);
         }
@@ -37,14 +52,22 @@ int main(int argc, char **argv)
 
     double stop = omp_get_wtime();
 
-    ff = fopen("result.txt","w");
-    for(i=0; i < x; i++)
+    // ff = fopen("result.txt","w");
+    // for(int i=0; i < x; i++)
+    // {
+    //     for (int j=0; j < y; j++)
+    //     {
+    //         fprintf(ff,"%f ",a[i][j]);
+    //     }
+    //     fprintf(ff,"\n");
+    // }
+    // fclose(ff);
+
+    printf("Time spent: %lf sec\n", (stop - start));
+
+    for(int i = 0; i < x; ++i)
     {
-        for (j=0; j < y; j++)
-        {
-            fprintf(ff,"%f ",a[i][j]);
-        }
-        fprintf(ff,"\n");
+        free(a[i]);
     }
-    fclose(ff);
+    free(a);
 }
