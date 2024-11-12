@@ -30,6 +30,5 @@ int main(int argc, char ** argv)
     }
 
     printf("sumVerified = %lf, diff = %lf\n", sumVerified, abs_(sumVerified - sum));
-
     return 0;
 }

@@ -5,7 +5,7 @@ Requirenments:
 - Clang
 - OpenMP
 
-To compile and generate file use `compile.sh` script:
+To compile and generate file run (on MacOS):
 
-    ./compile.sh hello.c hello
+    clang -Xclang -fopenmp -L/opt/homebrew/opt/libomp/lib -I/opt/homebrew/opt/libomp/include -lomp hello.c -o hello
 
