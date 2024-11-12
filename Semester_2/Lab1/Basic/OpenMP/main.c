@@ -31,18 +31,17 @@ int main(int argc, char **argv)
     //подготовительная часть – заполнение некими данными
     for (int i = 0; i < x; i++)
     {
-        for (int j=0; j<y; j++)
+        for (int j=0; j < y; j++)
         {
             a[i][j] = 10*i +j;
         }
     }
 
     // требуется обеспечить измерение времени работы данного цикла
-
     double start = omp_get_wtime();
 
     #pragma omp parallel for
-    for (int i=0; i < x; i++)
+    for (int i = 0; i < x; i++)
     {
         for (int j = 0; j < y; j++)
         {
@@ -52,16 +51,16 @@ int main(int argc, char **argv)
 
     double stop = omp_get_wtime();
 
-    // ff = fopen("result.txt","w");
-    // for(int i=0; i < x; i++)
-    // {
-    //     for (int j=0; j < y; j++)
-    //     {
-    //         fprintf(ff,"%f ",a[i][j]);
-    //     }
-    //     fprintf(ff,"\n");
-    // }
-    // fclose(ff);
+    ff = fopen("result.txt","w");
+    for(int i=0; i < x; i++)
+    {
+        for (int j=0; j < y; j++)
+        {
+            fprintf(ff,"%f ",a[i][j]);
+        }
+        fprintf(ff,"\n");
+    }
+    fclose(ff);
 
     printf("Time spent: %lf sec\n", (stop - start));
 

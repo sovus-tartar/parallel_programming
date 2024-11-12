@@ -60,16 +60,16 @@ int main(int argc, char **argv)
     }
     gettimeofday(&stop, NULL);
 
-    // ff = fopen("result.txt","w");
-    // for(i=0; i < x; i++)
-    // {
-    //     for (j=0; j < y; j++)
-    //     {
-    //         fprintf(ff,"%f ",a[i][j]);
-    //     }
-    //     fprintf(ff,"\n");
-    // }
-    // fclose(ff);
+    ff = fopen("result.txt","w");
+    for(i=0; i < x; i++)
+    {
+        for (j=0; j < y; j++)
+        {
+            fprintf(ff,"%f ",a[i][j]);
+        }
+        fprintf(ff,"\n");
+    }
+    fclose(ff);
 
     printf("Time spent: %lf sec\n", (double) getTimeOfDayDiff(start, stop) / kNanoseconds);
 
