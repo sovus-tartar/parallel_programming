@@ -1,6 +1,6 @@
 # Introduction to OpenMP
 
-Requirenments:
+Requirements:
 
 - Clang
 - OpenMP
