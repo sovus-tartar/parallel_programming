@@ -120,7 +120,9 @@ void executer(int rank, int size, double** a, const struct Margins X, const stru
         printf("Time spent: %lf sec\n", (stop - start));
     }
 
+#ifndef DISABLE_OUTPUT
     writeToFile(rank, size, a, X, Y);
+#endif
 
 }
 
@@ -149,6 +151,11 @@ struct Margins getMargins(int rank, int size, int maxVal)
     return ret;
 }
 
+int getMarginSize(struct Margins margin)
+{
+    return margin.end - margin.begin;
+}
+
 int main(int argc, char **argv)
 {
     MPI_Init(&argc, &argv);
@@ -161,18 +168,18 @@ int main(int argc, char **argv)
     const int x = atoi(argv[1]);
     const int y = atoi(argv[2]);
 
-    double** a = (double **)calloc(x, sizeof(double**));
+    struct Margins X = {0, getMarginSize(getMargins(rank, size, x))};
+    struct Margins Y = {0, y};
+
+    double** a = (double **)calloc(getMarginSize(X), sizeof(double**));
     handleCallocError(a);
-    for(int i = 0; i < x; ++i)
+    for(int i = X.begin; i < X.end; ++i)
     {
-        a[i] = (double*)calloc(y, sizeof(double*));
+        a[i] = (double*)calloc(getMarginSize(Y), sizeof(double*));
         handleCallocError(a[i]);
     }
 
     FILE *ff;
-
-    struct Margins X = getMargins(rank, size, x);
-    struct Margins Y = {0, y};
     //подготовительная часть – заполнение некими данными
     for (int i = X.begin; i < X.end; i++)
     {
@@ -184,15 +191,7 @@ int main(int argc, char **argv)
 
     executer(rank, size, a, X, Y);
 
-    // for (int i = 0; i < x; i++)
-    // {
-    //     for (int j = 0; j < y; j++)
-    //     {
-    //         a[i][j] = sin(2*a[i][j]);
-    //     }
-    // }
-
-    for(int i = 0; i < x; ++i)
+    for(int i = X.begin; i < X.end; ++i)
     {
         free(a[i]);
     }

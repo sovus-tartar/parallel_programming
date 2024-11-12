@@ -51,6 +51,8 @@ int main(int argc, char **argv)
 
     double stop = omp_get_wtime();
 
+#ifndef DISABLE_OUTPUT
+
     ff = fopen("result.txt","w");
     for(int i=0; i < x; i++)
     {
@@ -61,6 +63,8 @@ int main(int argc, char **argv)
         fprintf(ff,"\n");
     }
     fclose(ff);
+
+#endif
 
     printf("Time spent: %lf sec\n", (stop - start));
 
