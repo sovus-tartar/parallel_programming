@@ -41,7 +41,7 @@ int main(int argc, char **argv)
 
     double start = omp_get_wtime();
 
-    #pragma omp parallel
+    #pragma omp parallel for
     for (int i=0; i < x; i++)
     {
         for (int j = 0; j < y; j++)
