@@ -4,7 +4,15 @@
 
 #include <omp.h>
 
-void handleCallocError(void * ptr)
+#define func(x) sin(0.04 *(x))
+
+struct Borders
+{
+    int start;
+    int end;
+};
+
+void handleCallocError(void* ptr)
 {
     if (ptr == NULL)
     {
@@ -13,65 +21,69 @@ void handleCallocError(void * ptr)
     }
 }
 
-double f(double x)
-{
-    return sin(0.04 * x);
-}
-
 int main(int argc, char **argv)
 {
-    const int x = atoi(argv[1]);
-    const int y = atoi(argv[2]);
+    omp_set_num_threads(atoi(argv[3]));
+    printf("Number of threads: %d\n", atoi(argv[3]));
 
-    double** a = (double **)calloc(x, sizeof(double**));
+    const int kISize = atoi(argv[1]);
+    const int kJSize = atoi(argv[2]);
+
+    double** a = (double **) calloc(kISize, sizeof(double**));
     handleCallocError(a);
-    for(int i = 0; i < x; ++i)
+    for(int i = 0; i < kISize; ++i)
     {
-        a[i] = (double*)calloc(y, sizeof(double*));
+        a[i] = (double*) calloc(kJSize, sizeof(double*));
         handleCallocError(a[i]);
     }
 
     FILE *ff;
 
     //подготовительная часть – заполнение некими данными
-    for (int i = 0; i < x; i++)
+    for (int i = 0; i < kISize; i++)
     {
-        for (int j=0; j < y; j++)
+        for (int j = 0; j < kJSize; j++)
         {
-            a[i][j] = 10*i +j;
+            a[i][j] = 10 * i + j;
         }
     }
-
-    const uint8_t kNumberOfIterationsInBlock = 3;
-    const uint8_t kNumberOfParallelIterations = ((x - 3) / kNumberOfIterationsInBlock) + 1;
+    
+    const int kNumberOfIterationsInBlock = 3;
+    const int kNumberOfParallelIterations = ((kISize - 3) / kNumberOfIterationsInBlock) + 1;
 
     // требуется обеспечить измерение времени работы данного цикла
     double start = omp_get_wtime();
 
-
     for (int k = 0; k < kNumberOfParallelIterations; ++k)
     {
-        #pragma omp parallel for
-        for (int i = k * kNumberOfIterationsInBlock; i < (k + 1) * kNumberOfIterationsInBlock; ++i)
+        const int start = k * kNumberOfIterationsInBlock;
+        const int stop = (((k + 1) * kNumberOfIterationsInBlock) < (kISize - 3)) ? ((k + 1) * kNumberOfIterationsInBlock) : kISize - 3;
+
+        // printf("k = %d, i_start = %d, i_stop = %d\n", k, start, stop);
+
+        #pragma omp parallel for collapse(2)
+        for (int i = start; i < stop; ++i)
         {
-            for (int j = 0; j < y; ++j)
+            // #pragma omp parallel for
+            for (int j = 4; j < kJSize; ++j)
             {
-                a[i][j] = f(a[i + 3][j - 4])
+                a[i][j] = func(a[i + 3][j - 4]);
             }
         }
     }
 
-
     double stop = omp_get_wtime();
+
+    printf("Time spent: %lf sec\n", (stop - start));
 
 #ifndef DISABLE_OUTPUT
 
     ff = fopen("result.txt","w");
-    for(int i=0; i < x; i++)
+    for(int i=0; i < kISize; i++)
     {
-        for (int j=0; j < y; j++)
+        for (int j=0; j < kJSize; j++)
         {
-            fprintf(ff,"%f ",a[i][j]);
+            fprintf(ff,"%f ", a[i][j]);
         }
         fprintf(ff,"\n");
     }
@@ -79,9 +91,7 @@ int main(int argc, char **argv)
 
 #endif
 
-    printf("Time spent: %lf sec\n", (stop - start));
-
-    for(int i = 0; i < x; ++i)
+    for(int i = 0; i < kISize; ++i)
     {
         free(a[i]);
     }
