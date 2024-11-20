@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdint.h>
 #include <math.h>
 #include <string.h>
 
@@ -72,7 +73,7 @@ void writeToFile(int rank, int size, double** a, const struct Margins X, const s
     {
         strcpy(flags, "a");
     }
-    
+
     waitForTurn(rank, size);
     // printf("%d is starting writing\n", rank);
     FILE *ff;
@@ -160,13 +161,13 @@ int main(int argc, char **argv)
 {
     MPI_Init(&argc, &argv);
 
+    const int x = atoi(argv[1]);
+    const int y = atoi(argv[2]);
+
     int rank = 0;
     int size = 0;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     MPI_Comm_size(MPI_COMM_WORLD, &size);
-
-    const int x = atoi(argv[1]);
-    const int y = atoi(argv[2]);
 
     struct Margins X = getMargins(rank, size, x);
     struct Margins Y = {0, y};
