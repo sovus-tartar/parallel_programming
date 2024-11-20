@@ -59,4 +59,10 @@ int main(int argc, char **argv)
         fprintf(ff,"\n");
     }
     fclose(ff);
+
+    for(int i = 0; i < ISIZE; ++i)
+    {
+        free(a[i]);
+    }
+    free(a);
 }
