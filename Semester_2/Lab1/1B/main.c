@@ -61,10 +61,9 @@ int main(int argc, char **argv)
 
         // printf("k = %d, i_start = %d, i_stop = %d\n", k, start, stop);
 
-        #pragma omp parallel for collapse(2)
+        #pragma omp parallel for
         for (int i = start; i < stop; ++i)
         {
-            // #pragma omp parallel for
             for (int j = 4; j < kJSize; ++j)
             {
                 a[i][j] = func(a[i + 3][j - 4]);
