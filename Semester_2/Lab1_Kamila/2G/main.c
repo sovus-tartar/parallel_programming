@@ -75,8 +75,6 @@ int main(int argc, char **argv)
 
     printf("Time spent: %lf sec\n", (stop - start));
 
-#ifndef DISABLE_OUTPUT
-
     ff = fopen("result.txt","w");
     for(int i=0; i < kISize; i++)
     {
@@ -87,8 +85,6 @@ int main(int argc, char **argv)
         fprintf(ff,"\n");
     }
     fclose(ff);
-
-#endif
 
     for(int i = 0; i < kISize; ++i)
     {
