@@ -11,14 +11,12 @@ int main(int argc, char ** argv)
 
     printf("Sum for N = %d\n", N);
 
-    #pragma omp parallel
+    #pragma omp parallel for reduction (+:sum)
+    for (int i = 1; i <= N; ++i)
     {
-        #pragma omp for reduction (+:sum)
-        for (int i = 1; i <= N; ++i)
-        {
-            sum += (1 / (double) i);
-        }
+        sum += (1 / (double) i);
     }
+
 
     printf("Sum = %lf\n", sum);
 
