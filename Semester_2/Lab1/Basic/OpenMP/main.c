@@ -40,7 +40,7 @@ int main(int argc, char **argv)
     // требуется обеспечить измерение времени работы данного цикла
     double start = omp_get_wtime();
 
-    #pragma omp parallel for
+    #pragma omp parallel for collapse(2)
     for (int i = 0; i < x; i++)
     {
         for (int j = 0; j < y; j++)

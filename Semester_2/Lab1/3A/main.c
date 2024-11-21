@@ -115,8 +115,8 @@ void writeToFile(int rank, int size, double** a, const struct Margins X, const s
     
 }
 
-#define f(x) sin((0.1) * (x))
-#define g(x) (x) * (1.5)
+// #define f(x) sin((0.1) * (x))
+// #define g(x) (x) * (1.5)
 
 void executer(int rank, int size, double** a, double** b, const struct Margins X, const struct Margins Y)
 {
