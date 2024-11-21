@@ -54,15 +54,15 @@ int main(int argc, char **argv)
     double stop = omp_get_wtime();
     printf("Time spent: %lf sec\n", (stop - start));
 
-    // ff = fopen("result.txt","w");
-    // for(i = 0; i < ISIZE; i++)
-    // {
-    //     for (j=0; j < JSIZE; j++)
-    //     {
-    //         fprintf(ff,"%f ",a[i][j]);
-    //     }
-    //     fprintf(ff,"\n");
-    // }
+    ff = fopen("result.txt","w");
+    for(i = 0; i < ISIZE; i++)
+    {
+        for (j=0; j < JSIZE; j++)
+        {
+            fprintf(ff,"%f ",a[i][j]);
+        }
+        fprintf(ff,"\n");
+    }
 
-    // fclose(ff);
+    fclose(ff);
 }
