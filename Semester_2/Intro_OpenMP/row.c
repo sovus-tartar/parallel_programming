@@ -1,8 +1,7 @@
 #include <omp.h>
 #include <stdio.h>
 #include <stdlib.h>
-
-#define abs_(x) ((x) > 0) ? (x) : -(x)
+#include <math.h>
 
 int main(int argc, char ** argv)
 {
@@ -27,6 +26,6 @@ int main(int argc, char ** argv)
         sumVerified += 1 / (double) i;
     }
 
-    printf("sumVerified = %lf, diff = %lf\n", sumVerified, abs_(sumVerified - sum));
+    printf("sumVerified = %lf, diff = %lf\n", sumVerified, fabs(sumVerified - sum));
     return 0;
 }

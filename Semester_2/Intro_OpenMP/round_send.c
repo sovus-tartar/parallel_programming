@@ -6,7 +6,7 @@ int main()
 {
     
     int N = omp_get_max_threads();
-    char helloString[1024] = {"Begin\n"};
+    char helloString[1024] = "Begin\n";
 
     #pragma omp parallel for ordered
     {
