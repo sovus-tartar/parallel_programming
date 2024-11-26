@@ -4,5 +4,8 @@
 int main()
 {
     #pragma omp parallel
-    printf("Hello, world! from thread %d\n", omp_get_thread_num());
+    {
+        int threadNum = omp_get_thread_num();
+        printf("Hello, world! from thread %d\n", threadNum);
+    }
 }
