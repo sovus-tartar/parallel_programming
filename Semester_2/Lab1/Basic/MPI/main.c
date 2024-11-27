@@ -18,23 +18,6 @@ struct Margins
     int end;
 };
 
-void mpiWait(int rank, int size)
-{
-    if (rank == kMaster)
-    {
-        for (int i = 1; i < size - 1; ++i)
-        {
-            int temp;
-            MPI_Recv(&temp, 1, MPI_INT, i, kReady, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-        }
-    }
-    else
-    {
-        int temp = 0;
-        MPI_Send(&temp, 1, MPI_INT, kMaster, kReady, MPI_COMM_WORLD);
-    }
-}
-
 void waitForTurn(int rank, int size)
 {
     if (rank == kMaster)
@@ -95,7 +78,7 @@ void writeToFile(int rank, int size, double** a, const struct Margins X, const s
 void executer(int rank, int size, double** a, const struct Margins X, const struct Margins Y)
 {
 
-    mpiWait(rank, size);
+    MPI_Barrier(MPI_COMM_WORLD);
 
     double start;
     if (rank == kMaster)
@@ -112,7 +95,7 @@ void executer(int rank, int size, double** a, const struct Margins X, const stru
         }
     }
 
-    mpiWait(rank, size);
+    MPI_Barrier(MPI_COMM_WORLD);
 
     double stop;
     if (rank == kMaster)

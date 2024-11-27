@@ -62,7 +62,7 @@ int main(int argc, char **argv)
 
 #ifndef DISABLE_OUTPUT
 
-    ff = fopen("result.txt","w");
+    ff = fopen("result_single.txt","w");
     for(i=0; i < x; i++)
     {
         for (j=0; j < y; j++)
