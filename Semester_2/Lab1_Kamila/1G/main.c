@@ -132,19 +132,19 @@ int main(int argc, char **argv)
     }
 
 
-    // if (rank == 0)
-    // {
-    //     ff = fopen("result.txt","w");
-    //     for(i=0; i < ISIZE; i++)
-    //     {
-    //         for (j=0; j < JSIZE; j++)
-    //         {
-    //             fprintf(ff,"%f ",a[i][j]);
-    //         }
-    //         fprintf(ff,"\n");
-    //     }
-    //     fclose(ff);
-    // }
+    if (rank == 0)
+    {
+        ff = fopen("result.txt","w");
+        for(i=0; i < ISIZE; i++)
+        {
+            for (j=0; j < JSIZE; j++)
+            {
+                fprintf(ff,"%f ",a[i][j]);
+            }
+            fprintf(ff,"\n");
+        }
+        fclose(ff);
+    }
 
     for(int i = 0; i < ISIZE; ++i)
     {
