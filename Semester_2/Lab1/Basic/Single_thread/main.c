@@ -24,14 +24,14 @@ void handleCallocError(void * ptr)
 
 int main(int argc, char **argv)
 {
-    const int x = atoi(argv[1]);
-    const int y = atoi(argv[2]);
+    const int ISIZE = atoi(argv[1]);
+    const int JSIZE = atoi(argv[2]);
 
-    double** a = (double **)calloc(x, sizeof(double**));
+    double** a = (double **)calloc(ISIZE, sizeof(double**));
     handleCallocError(a);
-    for(int i = 0; i < x; ++i)
+    for(int i = 0; i < ISIZE; ++i)
     {
-        a[i] = (double*)calloc(y, sizeof(double*));
+        a[i] = (double*)calloc(JSIZE, sizeof(double*));
         handleCallocError(a[i]);
     }
 
@@ -41,9 +41,9 @@ int main(int argc, char **argv)
     struct timeval start = {}, stop = {};
 
     //подготовительная часть – заполнение некими данными
-    for (i=0; i < x; i++)
+    for (i=0; i < ISIZE; i++)
     {
-        for (j=0; j<y; j++)
+        for (j=0; j<JSIZE; j++)
         {
             a[i][j] = 10*i +j;
         }
@@ -51,9 +51,9 @@ int main(int argc, char **argv)
 
     gettimeofday(&start, NULL);
     // требуется обеспечить измерение времени работы данного цикла
-    for (i=0; i < x; i++)
+    for (i=0; i < ISIZE; i++)
     {
-        for (j = 0; j < y; j++)
+        for (j = 0; j < JSIZE; j++)
         {
             a[i][j] = sin(2*a[i][j]);
         }
@@ -63,9 +63,9 @@ int main(int argc, char **argv)
 #ifndef DISABLE_OUTPUT
 
     ff = fopen("result_single.txt","w");
-    for(i=0; i < x; i++)
+    for(i=0; i < ISIZE; i++)
     {
-        for (j=0; j < y; j++)
+        for (j=0; j < JSIZE; j++)
         {
             fprintf(ff,"%f ",a[i][j]);
         }
@@ -77,7 +77,7 @@ int main(int argc, char **argv)
 
     printf("Time spent: %lf sec\n", (double) getTimeOfDayDiff(start, stop) / kNanoseconds);
 
-    for(int i = 0; i < x; ++i)
+    for(int i = 0; i < ISIZE; ++i)
     {
         free(a[i]);
     }
