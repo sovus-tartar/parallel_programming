@@ -135,8 +135,8 @@ int main(int argc, char** argv)
     double* Y = (double *)malloc(N * sizeof(double));
     
     // Задаём начальные условия
-    Y[0] = 0;
-    Y[N - 1] = 1;
+    Y[0] = 0; //0
+    Y[N - 1] = 1; //b
 
     // Заполняем массив первым приближением
     for (int i = 0; i < N; i++)
