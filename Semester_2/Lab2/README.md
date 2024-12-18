@@ -166,7 +166,7 @@ MacOS:
 
 Linux:
 
-    gcc -lm -fopenmp -lomp main.c -o main
+    gcc -fopenmp main.c -o main -lm
 
 ## Использование
 

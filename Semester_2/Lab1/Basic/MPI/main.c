@@ -77,7 +77,6 @@ void writeToFile(int rank, int size, double** a, const struct Margins X, const s
 
 void executer(int rank, int size, double** a, const struct Margins X, const struct Margins Y)
 {
-
     MPI_Barrier(MPI_COMM_WORLD);
 
     double start;
